@@ -78,7 +78,7 @@ describe("GET /api/users", () => {
         expect(body.length).toBe(4);
       });
   });
-  it("should contain the properties slug and description", () => {
+  it("should contain the properties username, name and avatar_url", () => {
     return request(app)
       .get("/api/users")
       .expect(200)
@@ -94,5 +94,44 @@ describe("GET /api/users", () => {
         });
         expect(body.length).toBe(4);
       });
+  });
+});
+
+describe("PATCH /api/articles/:article_id  ", () => {
+  it('should increase the amount of votes the article gets by the inc_votes ', () => {
+    const newVote = { inc_votes: 20 }
+    return request(app)
+      .patch('/api/articles/2')
+      .send(newVote)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.article).toEqual(
+          expect.objectContaining({
+            article_id: 2,
+            votes: 20
+          })
+        )
+      })
+  });
+  it("should decrease the amount of votes the article gets by the inc_votes ", () => {
+    const newVote1 = { inc_votes: -10 };
+    const newVote2 = { inc_votes: 20 };
+    return request(app)
+      .patch("/api/articles/2")
+      .send(newVote1)
+      .then(() => {
+        return request(app)
+      .patch("/api/articles/2")
+      .send(newVote2)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.article).toEqual(
+          expect.objectContaining({
+            article_id: 2,
+            votes: 10,
+          })
+        );
+      });
+      })
   });
 });
