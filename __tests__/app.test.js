@@ -21,4 +21,20 @@ describe("GET /api/topics", () => {
         expect(body.length).toBe(3)
       })
   });
+  it('should contain the properties slug and description', () => {
+    return request(app)
+      .get("/api/topics")
+      .expect(200)
+      .then(({ body }) => {
+        body.forEach((topic) => {
+          expect(topic).toEqual(
+            expect.objectContaining({
+              slug: expect.any(String),
+              description: expect.any(String)
+            })
+          )
+        })
+        
+      });
+  });
 });
