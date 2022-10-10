@@ -26,6 +26,7 @@ describe("GET /api/topics", () => {
       .get("/api/topics")
       .expect(200)
       .then(({ body }) => {
+        expect(body.length).toBe(3);
         body.forEach((topic) => {
           expect(topic).toEqual(
             expect.objectContaining({
@@ -34,21 +35,12 @@ describe("GET /api/topics", () => {
             })
           )
         })
-        expect(body.length).toBe(3);
       });
   });
 });
 
 describe('GET /api/article/:article_id', () => {
-  it('should return the article object of the article_id', () => {
-    return request(app)
-      .get('/api/articles/2')
-      .expect(200)
-      .then(({ body }) => {
-        expect(body).toBeInstanceOf(Object)
-      })
-  });
-  it('should contain the required properties', () => {
+  it('should return an object contain the required properties', () => {
     return request(app)
       .get("/api/articles/2")
       .expect(200)
@@ -72,6 +64,35 @@ describe('GET /api/article/:article_id', () => {
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe('No article found for article_id')
+      });
+  });
+});
+
+describe("GET /api/users", () => {
+  it("should return all of the users data", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toBeInstanceOf(Array);
+        expect(body.length).toBe(4);
+      });
+  });
+  it("should contain the properties slug and description", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        body.forEach((topic) => {
+          expect(topic).toEqual(
+            expect.objectContaining({
+              username: expect.any(String),
+              name: expect.any(String),
+              avatar_url: expect.any(String)
+            })
+          );
+        });
+        expect(body.length).toBe(4);
       });
   });
 });
