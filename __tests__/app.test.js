@@ -134,4 +134,24 @@ describe("PATCH /api/articles/:article_id  ", () => {
       });
       })
   });
+  it("should return a 404 No Article Found if given an invalid id", () => {
+    const newVote = { inc_votes: -10 };
+    return request(app)
+      .patch("/api/articles/2000")
+      .send(newVote)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("No article found for article_id");
+      });
+  });
+  it('should return a 400 Invalid Input when given an invalid body ', () => {
+    const newVote = { inc_votes: 'banana' };
+    return request(app)
+      .patch("/api/articles/2")
+      .send(newVote)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid Input");
+      });
+  });
 });
