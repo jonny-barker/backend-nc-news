@@ -66,4 +66,13 @@ describe('GET /api/article/:article_id', () => {
         );
       });
   });
+  it('should return a 404 No Article Found if given an invalid id', () => {
+    return request(app)
+      .get("/api/articles/2000")
+      .expect(404)
+      .then(({ body }) => {
+        console.log(body);
+        expect(body.msg).toBe('No article found for article_id')
+      });
+  });
 });
