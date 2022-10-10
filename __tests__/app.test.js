@@ -75,3 +75,32 @@ describe('GET /api/article/:article_id', () => {
       });
   });
 });
+
+describe("GET /api/users", () => {
+  it("should return all of the users data", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toBeInstanceOf(Array);
+        expect(body.length).toBe(4);
+      });
+  });
+  it("should contain the properties slug and description", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        body.forEach((topic) => {
+          expect(topic).toEqual(
+            expect.objectContaining({
+              username: expect.any(String),
+              name: expect.any(String),
+              avatar_url: expect.any(String)
+            })
+          );
+        });
+        expect(body.length).toBe(4);
+      });
+  });
+});
