@@ -2,6 +2,7 @@ const seed = require("../db/seeds/seed");
 const testData = require("../db/data/test-data/index");
 const app = require("../api/app");
 const db = require("../db/connection");
+const {formatComments} = require('../db/seeds/utils')
 const request = require("supertest");
 
 afterAll(() => db.end());
@@ -38,8 +39,8 @@ describe("GET /api/topics", () => {
   });
 });
 
-describe('GET /api/articles/:article_id', () => {
-  it('should return an object contain the required properties', () => {
+describe("GET /api/articles/:article_id", () => {
+  it("should return an object contain the required properties", () => {
     return request(app)
       .get("/api/articles/2")
       .expect(200)
@@ -224,7 +225,7 @@ describe("GET /api/articles", () => {
 });
 
 describe("GET /api/articles/:article_id/comments", () => {
-  it('should return an array of the comments for the article id with the required properties with the most recent comment first', () => {
+  it("should return an array of the comments for the article id with the required properties with the most recent comment first", () => {
     return request(app)
       .get("/api/articles/5/comments")
       .expect(200)
@@ -237,7 +238,7 @@ describe("GET /api/articles/:article_id/comments", () => {
               votes: expect.any(Number),
               created_at: expect.any(String),
               author: expect.any(String),
-              body: expect.any(String)
+              body: expect.any(String),
             })
           );
         });
@@ -250,6 +251,35 @@ describe("GET /api/articles/:article_id/comments", () => {
       .then(({ body }) => {
         expect(body.msg).toBe("No article found for article_id");
       });
-  })
+  });
 });
 
+describe("POST /api/articles/:article_id/comments", () => {
+  it("should post a new comment to the article and return the posted comment", () => {
+    const newComment = [
+      {
+        body: "This is my new comment",
+        votes: 20,
+        author: "butter_bridge",
+        article_id: 2,
+        created_at: 1586179020000,
+      },
+    ];
+    const formattedNewComment = formatComments(newComment, {title2: 2})
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send(formattedNewComment)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body).toEqual(
+          expect.objectContaining({
+            comment_id: expect.any(Number),
+            votes: 20,
+            created_at: expect.any(String),
+            author: "butter_bridge",
+            body: "This is my new comment",
+          })
+        );
+      });
+  });
+});
