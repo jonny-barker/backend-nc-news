@@ -38,8 +38,8 @@ describe("GET /api/topics", () => {
   });
 });
 
-describe("GET /api/article/:article_id", () => {
-  it("should return an object contain the required properties", () => {
+describe('GET /api/articles/:article_id', () => {
+  it('should return an object contain the required properties', () => {
     return request(app)
       .get("/api/articles/2")
       .expect(200)
@@ -155,6 +155,28 @@ describe("PATCH /api/articles/:article_id  ", () => {
   });
 });
 
+describe("GET /api/articles/:article_id (comment count)", () => {
+  it("should return an object with the comment count ", () => {
+    return request(app)
+      .get("/api/articles/2")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article).toEqual(
+          expect.objectContaining({
+            author: expect.any(String),
+            title: expect.any(String),
+            article_id: expect.any(Number),
+            body: expect.any(String),
+            topic: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            comment_count: expect.any(Number),
+          })
+        );
+      });
+  });
+});
+
 describe("GET /api/articles", () => {
   it("should return an array of articles with the required properties", () => {
     return request(app)
@@ -201,3 +223,4 @@ describe("GET /api/articles", () => {
       });
   });
 });
+
