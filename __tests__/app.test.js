@@ -4,24 +4,23 @@ const app = require("../api/app");
 const db = require("../db/connection");
 const request = require("supertest");
 
-
 afterAll(() => db.end());
 
 beforeEach(() => {
-  return seed(testData)
+  return seed(testData);
 });
 
 describe("GET /api/topics", () => {
   it("should return all of the topics data", () => {
     return request(app)
-      .get('/api/topics')
+      .get("/api/topics")
       .expect(200)
       .then(({ body }) => {
         expect(body).toBeInstanceOf(Array);
-        expect(body.length).toBe(3)
-      })
+        expect(body.length).toBe(3);
+      });
   });
-  it('should contain the properties slug and description', () => {
+  it("should contain the properties slug and description", () => {
     return request(app)
       .get("/api/topics")
       .expect(200)
@@ -31,16 +30,16 @@ describe("GET /api/topics", () => {
           expect(topic).toEqual(
             expect.objectContaining({
               slug: expect.any(String),
-              description: expect.any(String)
+              description: expect.any(String),
             })
-          )
-        })
+          );
+        });
       });
   });
 });
 
-describe('GET /api/article/:article_id', () => {
-  it('should return an object contain the required properties', () => {
+describe("GET /api/article/:article_id", () => {
+  it("should return an object contain the required properties", () => {
     return request(app)
       .get("/api/articles/2")
       .expect(200)
@@ -58,12 +57,12 @@ describe('GET /api/article/:article_id', () => {
         );
       });
   });
-  it('should return a 404 No Article Found if given an invalid id', () => {
+  it("should return a 404 No Article Found if given an invalid id", () => {
     return request(app)
       .get("/api/articles/2000")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe('No article found for article_id')
+        expect(body.msg).toBe("No article found for article_id");
       });
   });
 });
@@ -88,7 +87,7 @@ describe("GET /api/users", () => {
             expect.objectContaining({
               username: expect.any(String),
               name: expect.any(String),
-              avatar_url: expect.any(String)
+              avatar_url: expect.any(String),
             })
           );
         });
@@ -98,20 +97,20 @@ describe("GET /api/users", () => {
 });
 
 describe("PATCH /api/articles/:article_id  ", () => {
-  it('should increase the amount of votes the article gets by the inc_votes ', () => {
-    const newVote = { inc_votes: 20 }
+  it("should increase the amount of votes the article gets by the inc_votes ", () => {
+    const newVote = { inc_votes: 20 };
     return request(app)
-      .patch('/api/articles/2')
+      .patch("/api/articles/2")
       .send(newVote)
       .expect(201)
       .then(({ body }) => {
         expect(body.article).toEqual(
           expect.objectContaining({
             article_id: 2,
-            votes: 20
+            votes: 20,
           })
-        )
-      })
+        );
+      });
   });
   it("should decrease the amount of votes the article gets by the inc_votes ", () => {
     const newVote1 = { inc_votes: -10 };
@@ -121,18 +120,18 @@ describe("PATCH /api/articles/:article_id  ", () => {
       .send(newVote1)
       .then(() => {
         return request(app)
-      .patch("/api/articles/2")
-      .send(newVote2)
-      .expect(201)
-      .then(({ body }) => {
-        expect(body.article).toEqual(
-          expect.objectContaining({
-            article_id: 2,
-            votes: 10,
-          })
-        );
+          .patch("/api/articles/2")
+          .send(newVote2)
+          .expect(201)
+          .then(({ body }) => {
+            expect(body.article).toEqual(
+              expect.objectContaining({
+                article_id: 2,
+                votes: 10,
+              })
+            );
+          });
       });
-      })
   });
   it("should return a 404 No Article Found if given an invalid id", () => {
     const newVote = { inc_votes: -10 };
@@ -144,8 +143,8 @@ describe("PATCH /api/articles/:article_id  ", () => {
         expect(body.msg).toBe("No article found for article_id");
       });
   });
-  it('should return a 400 Invalid Input when given an invalid body ', () => {
-    const newVote = { inc_votes: 'banana' };
+  it("should return a 400 Invalid Input when given an invalid body ", () => {
+    const newVote = { inc_votes: "banana" };
     return request(app)
       .patch("/api/articles/2")
       .send(newVote)
@@ -157,7 +156,7 @@ describe("PATCH /api/articles/:article_id  ", () => {
 });
 
 describe("GET /api/articles", () => {
-  it('should return an array of articles with the required properties', () => {
+  it("should return an array of articles with the required properties", () => {
     return request(app)
       .get("/api/articles")
       .expect(200)
@@ -177,7 +176,28 @@ describe("GET /api/articles", () => {
             })
           );
         });
-        
+      });
+  });
+  it("should take the query of topic and return the articles in that topic", () => {
+    return request(app)
+      .get("/api/articles?topic=cats")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.length).toBe(1);
+        body.forEach((article) => {
+          expect(article).toEqual(
+            expect.objectContaining({
+              author: "rogersop",
+              title: "UNCOVERED: catspiracy to bring down democracy",
+              article_id: expect.any(Number),
+              body: expect.any(String),
+              topic: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              comment_count: expect.any(Number),
+            })
+          );
+        });
       });
   });
 });
