@@ -47,3 +47,26 @@ exports.updateArticleById = (update, id) => {
       }
     });
 };
+
+exports.selectArticles = (topic) => {
+  const queryValues = [];
+  queryStatement = ``;
+  if (topic) { 
+    queryStatement += `WHERE topic = $1`;
+    queryValues.push(topic);
+  }
+  return db
+    .query(
+    `SELECT articles.*, CAST(COUNT (comments.article_id) AS INT) AS comment_count
+    FROM articles 
+    LEFT JOIN 
+    comments
+    ON articles.article_id=comments.article_id
+    ${queryStatement}
+    GROUP BY articles.article_id
+    ORDER BY created_at DESC `
+    , queryValues)
+    .then((result) => {
+      return result.rows;
+    });
+};
