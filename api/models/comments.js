@@ -31,7 +31,6 @@ exports.addComment = (comment) => {
     comment.votes,
     comment.created_at,
   ];
-  console.log(queryValues);
   return db
     .query(
       format(

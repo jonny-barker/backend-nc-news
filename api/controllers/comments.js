@@ -13,7 +13,6 @@ exports.getCommentsForArticle = (req, res, next) => {
 
 exports.postComment = (req, res, next) => {
   const comment = req.body[0]
-  console.log(comment);
   addComment(comment)
     .then((comment) => {
       res.status(201).send(comment);
