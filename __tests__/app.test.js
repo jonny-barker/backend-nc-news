@@ -223,3 +223,32 @@ describe("GET /api/articles", () => {
   });
 });
 
+describe("GET /api/articles/:article_id/comments", () => {
+  it('should return an array of the comments for the article id with the required properties with the most recent comment first', () => {
+    return request(app)
+      .get("/api/articles/5/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.length).toBe(2);
+        body.forEach((comment) => {
+          expect(comment).toEqual(
+            expect.objectContaining({
+              comment_id: expect.any(Number),
+              votes: expect.any(Number),
+              created_at: expect.any(String),
+              author: expect.any(String),
+              body: expect.any(String)
+            })
+          );
+        });
+      });
+  });
+  it("should return a 404 No Article Found if given an invalid id", () => {
+    return request(app)
+      .get("/api/articles/2000/comments")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("No article found for article_id");
+      });
+  })
+});
