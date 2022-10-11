@@ -52,7 +52,8 @@ exports.selectArticles = (topic) => {
     comments
     ON articles.article_id=comments.article_id
     ${queryStatement}
-    GROUP BY articles.article_id`
+    GROUP BY articles.article_id
+    ORDER BY created_at DESC `
     , queryValues)
     .then((result) => {
       return result.rows;

@@ -189,12 +189,12 @@ describe("GET /api/articles", () => {
             expect.objectContaining({
               author: "rogersop",
               title: "UNCOVERED: catspiracy to bring down democracy",
-              article_id: expect.any(Number),
+              article_id: 5,
               body: expect.any(String),
-              topic: expect.any(String),
-              created_at: expect.any(String),
-              votes: expect.any(Number),
-              comment_count: expect.any(Number),
+              topic: "cats",
+              created_at: "2020-08-03T13:14:00.000Z",
+              votes: 0,
+              comment_count: 2,
             })
           );
         });
