@@ -34,3 +34,17 @@ exports.updateArticleById = (update, id) => {
       }
     });
 };
+
+exports.selectArticles = () => {
+  return db
+    .query(
+      `SELECT articles.*, CAST(COUNT (comments.article_id) AS INT) AS comment_count
+    FROM articles 
+    LEFT JOIN 
+    comments
+    ON articles.article_id=comments.article_id
+    GROUP BY articles.article_id`)
+    .then((result) => {
+      return result.rows;
+    });
+}
