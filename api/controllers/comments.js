@@ -17,8 +17,7 @@ exports.postComment = (req, res, next) => {
   const comment = req.body[0];
   addComment(comment, id)
     .then((comment) => {
-      console.log(comment);
-      res.status(201).send(comment[0]);
+      res.status(201).send(comment);
     })
     .catch((err) => {
       next(err)

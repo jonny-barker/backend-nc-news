@@ -270,8 +270,8 @@ describe("GET /api/articles/:article_id/comments", () => {
   });
 });
 
-describe.only("POST /api/articles/:article_id/comments", () => {
-  xit("should post a new comment to the article and return the posted comment", () => {
+describe("POST /api/articles/:article_id/comments", () => {
+  it("should post a new comment to the article and return the posted comment", () => {
     const newComment = [
       {
         body: "This is my new comment",
