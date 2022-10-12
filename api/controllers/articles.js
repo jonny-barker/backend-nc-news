@@ -25,11 +25,14 @@ exports.patchArticleById = (req, res, next) => {
 };
 
 exports.getArticles = (req, res, next) => {
+  const sort_by = req.query.sort_by
+  const order = req.query.order
   const topic = req.query.topic
-  const promises = [selectArticles(topic)]
+  const promises = [selectArticles(topic, sort_by, order)];
   if (topic) {
     promises.push(selectTopics(topic))
   }
+  
   Promise.all(promises).then((promises) => {
     res.status(200).send( promises[0] )
   })

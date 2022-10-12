@@ -49,24 +49,43 @@ exports.updateArticleById = (update, id) => {
     });
 };
 
-exports.selectArticles = (topic) => {
+exports.selectArticles = (topic, sort_by = "created_at", order = "DESC") => {
+  const sortWhiteList = [
+    "created_at",
+    "author",
+    "topic",
+    "body",
+    "votes",
+    "article_id",
+    "title",
+  ];
+  const orderWhiteList = ["desc", "asc", "DESC", "ASC"];
+  
+  if (!sortWhiteList.includes(sort_by)) {
+    return Promise.reject({ status: 400, msg: "Invalid sort_by Value" });
+  } else if (!orderWhiteList.includes(order)) {
+    return Promise.reject({ status: 400, msg: "Invalid order Value" });
+  }
   const queryValues = [];
   queryStatement = ``;
-  if (topic) { 
+
+  if (topic) {
     queryStatement += `WHERE topic = $1`;
     queryValues.push(topic);
   }
+
   return db
     .query(
-    `SELECT articles.*, CAST(COUNT (comments.article_id) AS INT) AS comment_count
+      `SELECT articles.*, CAST(COUNT (comments.article_id) AS INT) AS comment_count
     FROM articles 
     LEFT JOIN 
     comments
     ON articles.article_id=comments.article_id
     ${queryStatement}
     GROUP BY articles.article_id
-    ORDER BY created_at DESC `
-    , queryValues)
+    ORDER BY ${sort_by} ${order};`,
+      queryValues
+    )
     .then((result) => {
       return result.rows;
     });

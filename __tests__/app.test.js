@@ -296,3 +296,66 @@ describe("POST /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe.only("GET /api/articles (queries)", () => {
+  it("should default to sort_by date order descending ", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.length).toBe(12);
+        expect(body).toBeSortedBy("created_at", {
+          descending: true,
+        });
+      });
+  });
+  it("should be able take a sort_by query", () => {
+    return request(app)
+      .get("/api/articles?sort_by=author")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.length).toBe(12);
+        expect(body).toBeSortedBy("author", {
+          descending: true,
+        });
+      });
+  });
+  it("should be able to take a order query", () => {
+    return request(app)
+      .get("/api/articles?order=asc")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.length).toBe(12);
+        expect(body).toBeSortedBy("created_at", {
+          descending: false,
+        });
+      });
+  });
+  it("should be able to take a order and a sort_by query", () => {
+    return request(app)
+      .get("/api/articles?sort_by=author&order=asc")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.length).toBe(12);
+        expect(body).toBeSortedBy("author", {
+          descending: false,
+        });
+      });
+  });
+  it("should give a 400 invalid sort_by value if given an invalid value", () => {
+    return request(app)
+      .get("/api/articles?sort_by=banana")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid sort_by Value");
+      });
+  });
+  it("should give a 400 invalid order value if given an invalid value", () => {
+    return request(app)
+      .get("/api/articles?order=banana")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid order Value");
+      });
+  });
+});
