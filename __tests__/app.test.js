@@ -270,18 +270,17 @@ describe("GET /api/articles/:article_id/comments", () => {
   });
 });
 
-describe("POST /api/articles/:article_id/comments", () => {
-  it("should post a new comment to the article and return the posted comment", () => {
+describe.only("POST /api/articles/:article_id/comments", () => {
+  xit("should post a new comment to the article and return the posted comment", () => {
     const newComment = [
       {
         body: "This is my new comment",
         author: "butter_bridge",
       },
     ];
-    const formattedNewComment = formatComments(newComment, { title2: 2 });
     return request(app)
       .post("/api/articles/2/comments")
-      .send(formattedNewComment)
+      .send(newComment)
       .expect(201)
       .then(({ body }) => {
         expect(body).toEqual(
@@ -294,28 +293,6 @@ describe("POST /api/articles/:article_id/comments", () => {
             article_id: 2,
           })
         );
-      });
-  });
-  xit("should return a 404 No Article Found if given an invalid id", () => {
-    const newComment = [
-      {
-        body: "This is my new comment",
-        votes: 20,
-        author: "butter_bridge",
-        article_id: 2000,
-        created_at: 1586179020000,
-      },
-    ];
-    const formattedNewComment = formatComments(newComment, {
-      title2: newComment.article_id,
-    });
-    return request(app)
-      .post(`/api/articles/${formattedNewComment.article_id}/comments`)
-      .send(formattedNewComment)
-      .expect(404)
-      .then(({ body }) => {
-        console.log(body);
-        expect(body.msg).toBe("No article found for article_id");
       });
   });
 });

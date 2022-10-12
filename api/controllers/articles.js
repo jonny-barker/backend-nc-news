@@ -33,6 +33,8 @@ exports.getArticles = (req, res, next) => {
   Promise.all(promises).then((promises) => {
     res.status(200).send( promises[0] )
   })
-  .catch(next)
+    .catch((err) => {
+    next(err)
+  })
   
 };
