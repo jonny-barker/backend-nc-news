@@ -297,7 +297,7 @@ describe("POST /api/articles/:article_id/comments", () => {
   });
 });
 
-describe.only("GET /api/articles (queries)", () => {
+describe("GET /api/articles (queries)", () => {
   it("should default to sort_by date order descending ", () => {
     return request(app)
       .get("/api/articles")
@@ -357,5 +357,13 @@ describe.only("GET /api/articles (queries)", () => {
       .then(({ body }) => {
         expect(body.msg).toBe("Invalid order Value");
       });
+  });
+});
+
+describe.only("DELETE /api/comments/:comment_id", () => {
+  it('should delete the comment with the coresponding id', () => {
+    return request(app)
+      .delete("/api/comments/2")
+      .expect(204)
   });
 });

@@ -25,11 +25,7 @@ exports.selectCommentsForArticle = (id) => {
 };
 
 exports.addComment = (comment, id) => {
-  queryValues = [
-    comment.body,
-    comment.author,
-    id
-  ];
+  queryValues = [comment.body, comment.author, id];
   return db
     .query(
       format(
@@ -46,5 +42,13 @@ exports.addComment = (comment, id) => {
       } else {
         return result.rows[0];
       }
+    });
+};
+
+exports.removeComment = (id) => {
+  return db
+    .query(format(`DELETE FROM comments WHERE comment_id = ${id}`))
+    .then(() => {
+      return;
     });
 };
