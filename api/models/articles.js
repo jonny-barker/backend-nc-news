@@ -1,4 +1,5 @@
 const db = require("../../db/connection");
+const { checkExists } = require("../../db/seeds/utils");
 
 exports.selectArticleById = (id) => {
   return db
