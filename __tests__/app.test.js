@@ -360,7 +360,7 @@ describe("GET /api/articles (queries)", () => {
   });
 });
 
-describe.only("DELETE /api/comments/:comment_id", () => {
+describe("DELETE /api/comments/:comment_id", () => {
   it('should delete the comment with the coresponding id', () => {
     return request(app)
       .delete("/api/comments/2")
