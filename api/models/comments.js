@@ -1,5 +1,6 @@
 const db = require("../../db/connection");
 const format = require("pg-format");
+const { checkExists } = require("../../db/seeds/utils");
 
 exports.selectCommentsForArticle = (id) => {
   return db
@@ -23,23 +24,21 @@ exports.selectCommentsForArticle = (id) => {
     });
 };
 
-exports.addComment = (comment) => {
+exports.addComment = (comment, id) => {
   queryValues = [
     comment.body,
     comment.author,
-    comment.article_id,
-    comment.votes,
-    comment.created_at,
+    id
   ];
   return db
     .query(
       format(
-        `INSERT INTO comments (body, author, article_id, votes, created_at)VALUES %L RETURNING *;`,
+        `INSERT INTO comments (body, author, article_id )VALUES %L RETURNING *;`,
         [queryValues]
       )
     )
     .then((result) => {
-      if (result.rows.length === 0) {
+      if (!result.rows[0]) {
         return Promise.reject({
           status: 404,
           msg: "No article found for article_id",

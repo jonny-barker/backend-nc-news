@@ -2,7 +2,7 @@ const seed = require("../db/seeds/seed");
 const testData = require("../db/data/test-data/index");
 const app = require("../api/app");
 const db = require("../db/connection");
-const {formatComments} = require('../db/seeds/utils')
+const { formatComments } = require("../db/seeds/utils");
 const request = require("supertest");
 
 afterAll(() => db.end());
@@ -222,6 +222,22 @@ describe("GET /api/articles", () => {
         });
       });
   });
+  it("should return an empty array if the topic is valid but not used", () => {
+    return request(app)
+      .get("/api/articles?topic=paper")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toEqual([]);
+      });
+  });
+  it("should throw a 404 invalid topic if the topic is invalid", () => {
+    return request(app)
+      .get("/api/articles?topic=banana")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid Topic");
+      });
+  });
 });
 
 describe("GET /api/articles/:article_id/comments", () => {
@@ -259,13 +275,10 @@ describe("POST /api/articles/:article_id/comments", () => {
     const newComment = [
       {
         body: "This is my new comment",
-        votes: 20,
         author: "butter_bridge",
-        article_id: 2,
-        created_at: 1586179020000,
       },
     ];
-    const formattedNewComment = formatComments(newComment, {title2: 2})
+    const formattedNewComment = formatComments(newComment, { title2: 2 });
     return request(app)
       .post("/api/articles/2/comments")
       .send(formattedNewComment)
@@ -274,12 +287,35 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(body).toEqual(
           expect.objectContaining({
             comment_id: expect.any(Number),
-            votes: 20,
+            votes: 0,
             created_at: expect.any(String),
             author: "butter_bridge",
             body: "This is my new comment",
+            article_id: 2,
           })
         );
+      });
+  });
+  xit("should return a 404 No Article Found if given an invalid id", () => {
+    const newComment = [
+      {
+        body: "This is my new comment",
+        votes: 20,
+        author: "butter_bridge",
+        article_id: 2000,
+        created_at: 1586179020000,
+      },
+    ];
+    const formattedNewComment = formatComments(newComment, {
+      title2: newComment.article_id,
+    });
+    return request(app)
+      .post(`/api/articles/${formattedNewComment.article_id}/comments`)
+      .send(formattedNewComment)
+      .expect(404)
+      .then(({ body }) => {
+        console.log(body);
+        expect(body.msg).toBe("No article found for article_id");
       });
   });
 });
