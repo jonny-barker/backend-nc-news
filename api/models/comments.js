@@ -25,11 +25,7 @@ exports.selectCommentsForArticle = (id) => {
 };
 
 exports.addComment = (comment, id) => {
-  queryValues = [
-    comment.body,
-    comment.author,
-    id
-  ];
+  queryValues = [comment.body, comment.author, id];
   return db
     .query(
       format(
@@ -46,5 +42,34 @@ exports.addComment = (comment, id) => {
       } else {
         return result.rows[0];
       }
+    });
+};
+
+exports.checkCommentExists = (id) => {
+  return db
+    .query(
+      `SELECT *
+    FROM comments
+    WHERE comment_id=$1
+    `,
+      [id]
+    )
+    .then((result) => {
+      if (result.rows.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: "No comment found for comment_id",
+        });
+      } else {
+        return result.rows;
+      }
+    });
+};
+
+exports.removeComment = (id) => {
+  return db
+    .query(format(`DELETE FROM comments WHERE comment_id = ${id}`))
+    .then(() => {
+      return;
     });
 };

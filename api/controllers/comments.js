@@ -1,4 +1,9 @@
-const { selectCommentsForArticle, addComment } = require("../models/comments");
+const {
+  selectCommentsForArticle,
+  addComment,
+  removeComment,
+  checkCommentExists,
+} = require("../models/comments");
 const { selectArticleById } = require("../models/articles");
 
 exports.getCommentsForArticle = (req, res, next) => {
@@ -7,9 +12,7 @@ exports.getCommentsForArticle = (req, res, next) => {
     .then((comments) => {
       res.status(200).send(comments);
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 exports.postComment = (req, res, next) => {
@@ -19,7 +22,15 @@ exports.postComment = (req, res, next) => {
     .then((comment) => {
       res.status(201).send(comment);
     })
-    .catch((err) => {
-      next(err)
-    });
+    .catch(next);
+};
+
+exports.deleteComment = (req, res, next) => {
+  const id = req.params.comment_id;
+  const promises = [removeComment(id), checkCommentExists(id)];
+  Promise.all(promises)
+    .then(() => {
+      res.send(204);
+    })
+    .catch(next);
 };
