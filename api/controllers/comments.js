@@ -4,7 +4,6 @@ const {
   removeComment,
   checkCommentExists,
 } = require("../models/comments");
-const { selectArticleById } = require("../models/articles");
 
 exports.getCommentsForArticle = (req, res, next) => {
   const id = req.params.article_id;

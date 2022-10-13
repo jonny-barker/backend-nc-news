@@ -4,6 +4,7 @@ const app = require("../api/app");
 const db = require("../db/connection");
 const { formatComments } = require("../db/seeds/utils");
 const request = require("supertest");
+const endpoints = require('../endpoints.json')
 
 afterAll(() => db.end());
 
@@ -97,7 +98,7 @@ describe("GET /api/users", () => {
   });
 });
 
-describe("PATCH /api/articles/:article_id  ", () => {
+describe("PATCH /api/articles/:article_id ", () => {
   it("should increase the amount of votes the article gets by the inc_votes ", () => {
     const newVote = { inc_votes: 20 };
     return request(app)
@@ -370,5 +371,16 @@ describe("DELETE /api/comments/:comment_id", () => {
     return request(app)
       .delete("/api/comments/200")
       .expect(404);
+  });
+});
+
+describe('GET /api', () => {
+  it('should return a json file of all of the endpoints in the api', () => {
+    return request(app)
+      .get('/api')
+      .expect(200)
+      .then(({body}) => {
+        expect(body).toEqual(endpoints);
+      })
   });
 });

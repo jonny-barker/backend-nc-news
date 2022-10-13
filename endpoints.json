@@ -23,5 +23,92 @@
         }
       ]
     }
+  },
+  "GET /api/articles/:article_id": {
+    "description": "serves an object of the article with the coresponding article id",
+    "queries": [],
+    "exampleResponse": {
+      "article_id": 2,
+      "title": "Sony Vaio; or, The Laptop",
+      "topic": "mitch",
+      "author": "icellusedkars",
+      "body": "Call me Mitchell. Some years ago—never mind how long precisely—having little or no money in my purse, and nothing particular to interest me on shore, I thought I would buy a laptop about a little and see the codey part of the world. It is a way I have of driving off the spleen and regulating the circulation. Whenever I find myself growing grim about the mouth; whenever it is a damp, drizzly November in my soul; whenever I find myself involuntarily pausing before coffin warehouses, and bringing up the rear of every funeral I meet; and especially whenever my hypos get such an upper hand of me, that it requires a strong moral principle to prevent me from deliberately stepping into the street, and methodically knocking people’s hats off—then, I account it high time to get to coding as soon as I can. This is my substitute for pistol and ball. With a philosophical flourish Cato throws himself upon his sword; I quietly take to the laptop. There is nothing surprising in this. If they but knew it, almost all men in their degree, some time or other, cherish very nearly the same feelings towards the the Vaio with me.",
+      "created_at": "2020-10-16T05:03:00.000Z",
+      "votes": 0,
+      "comment_count": 0
+    }
+  },
+  "GET /api/users": {
+    "description": "serves an array of all of the users",
+    "queries": [],
+    "exampleResponse": {
+      "users": [
+        {
+          "username": "butter_bridge",
+          "name": "jonny",
+          "avatar_url": " https: //www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+        },
+        {
+          "username": "lurker",
+          "name": "do_nothing",
+          "avatar_url": "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png"
+        }
+      ]
+    }
+  },
+  "PATCH /api/articles/:article_id ": {
+    "description": "the request body takes a inc_votes object { inc_votes: newVotes }, the new vote will indicate how much the articles votes should change by",
+    "queries": [],
+    "exampleResponse": {
+      "article": {
+        "title": "Living in the shadow of a great man",
+        "topic": "mitch",
+        "author": "butter_bridge",
+        "body": "I find this existence challenging",
+        "created_at": 1542284514171,
+        "votes": 101
+      }
+    }
+  },
+  "GET /api/articles/:article_id/comments": {
+    "description": "serves an array of all the comments with the corresponding article_id",
+    "queries": [],
+    "exampleResponse": {
+      "comments": [
+        {
+          "comment_id": 3,
+          "body": "What do you see? I have no idea where this will lead us. This place I speak of, is known as the Black Lodge.",
+          "author": "icellusedkars",
+          " votes": 16,
+          " created_at": 1101386163389
+        },
+        {
+          "comment_id": 4,
+          "body": "I am 100% sure that we're not completely sure.",
+          "author": "butter_bridge",
+          "votes": 1,
+          "created_at": 1069850163389
+        }
+      ]
+    }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "the request body takes a newComment object that has a body and an author and returns the formatted comment",
+    "queries": [],
+    "exampleResponse": {
+      "comment_id": 2,
+      "author": "butter_bridge",
+      "article_id": 1,
+      "votes": 0,
+      "created_at": 1511354163389,
+      "body": "This is my new comment"
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes the comment with the corresponding comment_id",
+    "queries": [],
+    "exampleResponse": {
+      "staus": 204
+    }
   }
 }
