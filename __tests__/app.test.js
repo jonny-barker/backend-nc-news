@@ -366,7 +366,7 @@ describe("DELETE /api/comments/:comment_id", () => {
       .delete("/api/comments/2")
       .expect(204)
   });
-  it('should throw a 404 is given an invalif comment id', () => {
+  it('should throw a 404 is given an invalid comment id', () => {
     return request(app)
       .delete("/api/comments/200")
       .expect(404);
