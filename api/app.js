@@ -1,17 +1,19 @@
-const { getTopics } = require("./controllers/topics");
+const { getTopics } = require("./controllers/topics-c");
 const {
   getArticleById,
   patchArticleById,
   getArticles,
-} = require("./controllers/articles");
+} = require("./controllers/articles-c");
 const {
   getCommentsForArticle,
   postComment,
   deleteComment,
-} = require("./controllers/comments");
-const { getUsers } = require("./controllers/users");
-const { getEndpoints } = require("./controllers/api");
+} = require("./controllers/comments-c");
+const { getUsers } = require("./controllers/users-c");
+const { getEndpoints } = require("./controllers/api-c");
 const express = require("express");
+const cors = require("cors");
+app.use(cors());
 const app = express();
 app.use(express.json());
 

@@ -3,7 +3,7 @@ const {
   addComment,
   removeComment,
   checkCommentExists,
-} = require("../models/comments");
+} = require("../models/comments-m");
 
 exports.getCommentsForArticle = (req, res, next) => {
   const id = req.params.article_id;
