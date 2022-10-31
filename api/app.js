@@ -13,10 +13,10 @@ const { getUsers } = require("./controllers/users-c");
 const { getEndpoints } = require("./controllers/api-c");
 const express = require("express");
 const cors = require("cors");
-app.use(cors());
+
 const app = express();
 app.use(express.json());
-
+app.use(cors());
 app.get("/api/topics", getTopics);
 app.get("/api/articles/:article_id", getArticleById);
 app.get("/api/users", getUsers);
